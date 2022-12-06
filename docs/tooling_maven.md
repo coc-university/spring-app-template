@@ -78,6 +78,13 @@ Goals of a package-manager:
   - .m2
 - mvncentral, ghrp, npm-registry ...
 
+## Artefact Repoistories:
+
+JFrog product for hosting artifacts, common alternative would
+be [Nexus](https://de.sonatype.com/products/nexus-repository)
+
+Basically an internal repository, with access to other central repositories. I.e. internal packages, stay internal, with access to public dependencies.
+
 ## Pom Structure
 
 - [POM Convention](https://maven.apache.org/developers/conventions/code.html#POM_Code_Convention)
@@ -106,7 +113,7 @@ A phase: clean, compile..
 
 A goal: sonar:sonar
 
-Note different syntax.
+☝️Note different syntax.
 
 > A phase is build of goals, but a goal is not bound to any build phase could be executed outside of the build lifecycle
 > by direct invocation. [Maven](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)
