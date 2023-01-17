@@ -113,7 +113,7 @@ A phase: clean, compile..
 
 A goal: sonar:sonar
 
-☝️Note different syntax.
+☝ ️Note different syntax.
 
 > A phase is build of goals, but a goal is not bound to any build phase could be executed outside of the build lifecycle
 > by direct invocation. [Maven](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html)

@@ -1,0 +1,216 @@
+openapi: 3.0.3
+info:
+  title: Project Management
+  version: "1.0"
+servers:
+- url: https://api.server.test/v1
+paths:
+  /health:
+    get:
+      operationId: checkHealth
+      responses:
+        "200":
+          description: OK
+        "500":
+          description: ERROR
+  /projects:
+    delete:
+      responses:
+        "204":
+          description: Deleted successfully
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not authorized
+      security:
+      - BasicAuth: []
+      summary: Deletes all projects.
+    get:
+      description: returns a list of all currently known projects (no pagination!)
+      operationId: getAllProjects
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Project'
+                type: array
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Get all projects
+    post:
+      description: Creates new project. Needs to specify at least name and description.
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Created
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: A specified parameter is not allowed
+      summary: Create new project.
+  /projects/{id}:
+    delete:
+      description: Deletes a project by ID.
+      operationId: deleteProject
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Deleted successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Delete project
+    get:
+      description: returns a specific project by ID
+      operationId: getProjectById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+      summary: Get projects by specific ID
+    put:
+      description: Update the fields on an existing project. ID cannot be modified.
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        "204":
+          description: Modified successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: The specified resource was not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: A specified parameter is not allowed
+      summary: Modify existing project.
+components:
+  responses:
+    NotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: The specified resource was not found
+    UnprocessableEntity:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: A specified parameter is not allowed
+    Unauthorized:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      description: Not authorized
+  schemas:
+    Error:
+      properties:
+        code:
+          title: code
+          type: string
+        message:
+          title: message
+          type: string
+      required:
+      - code
+      - message
+      title: Error
+      type: object
+    Project:
+      example:
+        name: name
+        description: description
+        id: id
+        person_days: 0.14658129805029452
+        deadline: 6
+        start_date: 0
+      properties:
+        id:
+          title: id
+          type: string
+        name:
+          title: name
+          type: string
+        description:
+          title: description
+          type: string
+        start_date:
+          title: start_date
+          type: integer
+        deadline:
+          title: deadline
+          type: integer
+        person_days:
+          minimum: 0
+          title: person_days
+          type: number
+      title: Project
+      type: object
+  securitySchemes:
+    BasicAuth:
+      scheme: basic
+      type: http
