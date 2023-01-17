@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Create a regex for a conventional commit.
 # This is copied from this project: https://github.com/dwmkerr/java-maven-standard-version-sample/blob/main/.githooks/commit-msg
-# Decide for your preferred regex pattern
+
+# Create a regex for a conventional commit.
 convetional_commit_regex="^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z \-]+\))?!?: .+$"
 
 # Get the commit message (the parameter we're given is just the path to the temporary file which holds the message).
