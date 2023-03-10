@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.0.0</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>com.codecampn</groupId>
+	<artifactId>spring-app-template</artifactId>
+	<version>1.2.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>spring-app-template</name>
+	<description>Demo project for Spring Boot</description>
+	<inceptionYear>2023</inceptionYear>
+	<organization>
+		<name>Codecamp:N GmbH</name>
+		<url>https://codecamp-n.com/</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>RS</id>
+			<name>Robin Schneider</name>
+			<email>robin.schneider@codecamp-n.com</email>
+			<organization>Codecamp:N GmbH</organization>
+			<organizationUrl>https://codecamp-n.com/</organizationUrl>
+			<roles>
+				<role>Software Engineer</role>
+			</roles>
+			<timezone>1</timezone>
+		</developer>
+	</developers>
+
+<!--	<distributionManagement>-->
+<!--		<repository>-->
+<!--			<id>central</id>-->
+<!--			<name>libs-releases-local</name>-->
+<!--			<url>TODO</url>-->
+<!--		</repository>-->
+
+<!--		<snapshotRepository>-->
+<!--			<id>central</id>-->
+<!--			<name>libs-snapshots-local</name>-->
+<!--			<url>TODO</url>-->
+<!--		</snapshotRepository>-->
+<!--	</distributionManagement>-->
+
+	<properties>
+		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<!-- dependency for normal rest api and tomcat server -->
+			<!-- if you need reactive stack, use webflux with netty -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- the springdoc-openapi-ui dependency don't work with spring boot 3.0 (only 2.7) -->
+			<!-- but we can use instead the webmvc-ui dependency: https://springdoc.org/v2/ -->
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+
+		<dependency>
+			<!-- with this dependency you can customize the swagger spec/ui -->
+			<!-- just insert some annotations on your class/method, e.g. @Tag(name = "some-name") -->
+			<!-- but normally you should define everything in the /resource/openapi spec -->
+			<!-- it's also used by the generated V1Api interface -->
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>2.1.7</version>
+		</dependency>
+
+		<dependency>
+			<!-- used in generated ContractResponse (JsonNullable) -->
+			<!-- https://github.com/OpenAPITools/jackson-databind-nullable -->
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>0.2.1</version>
+		</dependency>
+
+		<dependency>
+			<!-- access to database via abstraction layer, e.g. repo interface -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- in-memory sql database, use real postgres/mysql/oracle/etc. in prod -->
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- version control for the database -->
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- add api endpoints for monitoring, check props in yaml -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- not used at the moment, but best practice in general -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- for ConfigProperties -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<!-- avoid boilerplate code -->
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<!-- defaults for testing, e.g. junit, assertj, etc. -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<!-- default plugin for spring apps -->
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<!-- generate target/classes/META-INF/build-info.properties -->
+							<!-- visible in /api/info -->
+							<goal>build-info</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<!-- generate api classes/interfaces from yaml spec (contract first) -->
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>6.2.1</version>
+				<configuration>
+					<generatorName>spring</generatorName>
+					<output>${project.build.directory}/generated-sources</output>
+					<configOptions>
+						<sourceFolder>src/gen/java</sourceFolder>
+						<interfaceOnly>true</interfaceOnly>
+						<useBeanValidation>true</useBeanValidation>
+						<generateApis>false</generateApis>
+						<generateSupportingFiles>false</generateSupportingFiles>
+						<dateLibrary>java8-localdatetime</dateLibrary>
+						<useTags>true</useTags> <!-- set interface filename V1Api -->
+						<!-- https://openapi-generator.tech/docs/generators/spring/ -->
+						<useSpringBoot3>true</useSpringBoot3>
+					</configOptions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-api</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/contract-service-v1.yaml
+							</inputSpec>
+							<apiPackage>com.codecampn.spring.app.template.api.controller</apiPackage>
+							<modelPackage>com.codecampn.spring.app.template.api.model</modelPackage>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<!-- generate report of violated code conventions -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<configLocation>checkstyle.xml</configLocation>
+					<sourceDirectories>
+						<sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+					</sourceDirectories>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+<!--			<plugin>-->
+<!--				&lt;!&ndash; generate file with git infos in target/classes &ndash;&gt;-->
+<!--				&lt;!&ndash; visible in /api/info &ndash;&gt;-->
+<!--				<groupId>io.github.git-commit-id</groupId>-->
+<!--				<artifactId>git-commit-id-maven-plugin</artifactId>-->
+<!--				<version>5.0.0</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>get-the-git-infos</id>-->
+<!--						<goals>-->
+<!--							<goal>revision</goal>-->
+<!--						</goals>-->
+<!--						<phase>initialize</phase>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<configuration>-->
+<!--					<generateGitPropertiesFile>true</generateGitPropertiesFile>-->
+<!--					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties-->
+<!--					</generateGitPropertiesFilename>-->
+<!--					<includeOnlyProperties>-->
+<!--						<includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>-->
+<!--						<includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>-->
+<!--					</includeOnlyProperties>-->
+<!--					<commitIdGenerationMode>full</commitIdGenerationMode>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
+
+			<plugin>
+				<!-- check maven dependency versions -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>enforce</id>
+						<configuration>
+							<rules>
+								<dependencyConvergence/>
+							</rules>
+						</configuration>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<!-- run unit tests (must end with Test.java) -->
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<skip>false</skip>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- run integration tests (must end with IT.java by default) -->
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.22.2</version>
+				<executions>
+					<execution>
+						<id>integration-tests</id>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

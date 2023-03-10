@@ -1,0 +1,6 @@
+
+# this profile can be activated in default application.yaml, or via command line option
+# override value in profile
+my-section:
+  hello-message: ${HELLO_MESSAGE:Hello from dev profile with default message} # access via @Value
+

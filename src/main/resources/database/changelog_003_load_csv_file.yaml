@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: microservice-template-3
+      author: robin-schneider
+      changes:
+
+        - loadData:
+            schemaName: microservice_template
+            tableName: contract
+            encoding: UTF-8
+            separator: ;
+            file: database/data/demo-contract.csv

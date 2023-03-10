@@ -1,0 +1,90 @@
+name: docker build + release-please
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-dockerize:
+    runs-on: ubuntu-latest
+    name: mvn clean install and Docker Build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: cache maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: get release version number
+        run: |
+          mvn versions:set -DremoveSnapshot
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=version::$VERSION"
+        id: jar-version
+
+      - name: mvn clean install
+        run: mvn clean install
+
+      - name: mvn revert version (versioning will be done by release-please-action)
+        run: mvn versions:revert
+      
+      #      - name: run SonarQube
+      #        run: |
+      #          mvn sonar:sonar \
+      #          -Dsonar.projectName=spring-app-template \
+      #          -Dsonar.projectKey=coc-universe_spring-app-template \
+      #          -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }} \
+      #          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }} \
+      #          -Dsonar.branch.name=main \
+      #          -Dsonar.java.coveragePlugin=jacoco \
+      #          -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco/jacoco.xml
+
+      - name: copy jar file
+        run: cp target/spring-app-template**.jar app.jar
+
+      - name: build and push docker image
+        if: ${{ success() }}
+        run: |
+          VERSION=${{ steps.jar-version.outputs.version }}
+          docker build -t spring-app-template:$VERSION . --build-arg RUNNABLE_JAR=app.jar --no-cache
+          echo ${{ secrets.PUSH_PAT }} | docker login ghcr.io -u ${{ secrets.PUSH_USERNAME }} --password-stdin
+          docker tag spring-app-template:$VERSION ghcr.io/coc-university/spring-app-template:$VERSION
+          docker push ghcr.io/coc-university/spring-app-template:$VERSION
+
+      - name: generate test summary
+        if: ${{ failure() }}
+        run: |
+          mvn surefire-report:report-only -DshowSuccess=false
+          mvn site -DgenerateReports=false
+
+      - name: upload test summary
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: target/site
+
+  release:
+    needs: [ build-and-dockerize ]
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.releases_created }}
+      release_major: ${{ steps.release.outputs.major }}
+      release_minor: ${{ steps.release.outputs.minor }}
+      release_patch: ${{ steps.release.outputs.patch }}
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          token: ${{ secrets.PUSH_PAT }}
+          release-type: maven
+          package-name: spring-app-template
