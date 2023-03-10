@@ -1,4 +1,4 @@
-FROM openjdk:17.0.2
+FROM openjdk:18.0.2
 LABEL Description="Docker container for Spring Boot App Template on OpenJDK17"
 
 ARG RUNNABLE_JAR='app.jar'
