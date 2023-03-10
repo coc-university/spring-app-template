@@ -13,6 +13,7 @@ Given example config:
 * github actions:
   * build (feature-) branches on pull requests
   * release build: use of conventional commits; docker build and push
+  * TODO in your project: add PUSH_PAT and PUSH_USERNAME to your project (settings -> Secrets and variables -> Actions)
 * dependabot config (github) for docker and maven dependencies
 
 # for developers
