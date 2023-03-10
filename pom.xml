@@ -166,7 +166,7 @@
 				<!-- generate api classes/interfaces from yaml spec (contract first) -->
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>6.2.1</version>
+				<version>6.4.0</version>
 				<configuration>
 					<generatorName>spring</generatorName>
 					<output>${project.build.directory}/generated-sources</output>
