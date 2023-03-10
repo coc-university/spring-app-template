@@ -9,6 +9,7 @@ Given example config:
 * Management endpoint (info, health, ...)
 * OpenAPI yaml example for code generation of example REST Controller
 * checkstyle
+* environment variables with defaults in application.yml
 * github actions:
   * build (feature-) branches on pull requests
   * release build: use of conventional commits; docker build and push
@@ -22,4 +23,4 @@ Given example config:
 `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
 
 ## swagger
-http://localhost:8080/api/swagger-ui/index.html#/
+http://localhost:8080/swagger-ui/index.html#/

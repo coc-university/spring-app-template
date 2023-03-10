@@ -1,18 +1,18 @@
-
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
   servlet:
-    context-path: /api
-    # base path: http://localhost:8080/api
+    context-path: ${SERVLET_CONTEXT_PATH:}
+    # base path: http://localhost:8080
 
 spring:
   profiles:
-    active: default, dev
+    active: ${SPRING_PROFILES:default, dev}
   datasource:
+    # url: jdbc:postgresql://${DB_HOSTNAME:localhost}:${DB_PORT:5432}/${DB_NAME:spring-template}
     # http://www.h2database.com/html/features.html
     url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    username: test
-    password: test
+    username: ${DB_USERNAME:test}
+    password: ${DB_PASSWORD:test}
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: false
@@ -27,24 +27,24 @@ spring:
     console:
       enabled: false
       path: /h2-console
-      # http://localhost:8080/api/h2-console
+      # http://localhost:8080/h2-console
       # not accessible with active security
   liquibase:
     # reference to resources folder
     change-log: classpath:database/changelog_000_main.yaml
     liquibaseSchema: public
-    enabled: true
+    enabled: ${LIQUIBASE_ENABLED:true}
 
 springdoc:
   api-docs:
     path: "/docs-api"
   swagger-ui:
     path: "/docs-ui"
-    # http://localhost:8080/api/docs-ui
+    # http://localhost:8080/docs-ui
 
 logging:
   level:
-    root: info
+    root: ${LOGGING_ROOT_LEVEL:info}
 
 # custom properties
 my-section:
@@ -55,7 +55,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: info, health, metrics, beans, prometheus
+        include: ${ACTUATOR_ENDPOINTS:info, health, metrics, beans, prometheus}
       path-mapping:
         health: health
         info: info
@@ -65,16 +65,16 @@ management:
       base-path: /
   endpoint:
     health:
-      show-details: always
+      show-details: ${ACTUATOR_HEALTH_SHOW_DETAILS:always}
       cache:
-        time-to-live: 3000
+        time-to-live: ${ACTUATOR_HEALTH_TTL:3000}
       probes:
-        enabled: true
+        enabled: ${ACTUATOR_HEALTH_ENABLED:true}
       group:
         readiness:
           include: "readinessState"
     prometheus:
-      enabled: true
+      enabled: ${ACTUATOR_PROMETHEUS_ENABLED:true}
   health:
     livenessstate:
       enabled: true
