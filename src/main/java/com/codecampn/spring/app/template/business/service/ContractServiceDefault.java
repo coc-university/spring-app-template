@@ -24,6 +24,7 @@ public class ContractServiceDefault implements ContractService {
     }
 
     // decouple internal structure from the outside (entity to response DTO)
+    // for bigger projects you can use tools like mapstruct
     private ContractResponse mapContractToContractResponse(Contract contract) {
         ContractResponse response = new ContractResponse();
         response.setTitle(contract.getName()); // just as example, map name to title

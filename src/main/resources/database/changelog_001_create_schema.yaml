@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: microservice-template-1
+      id: spring-app-template-1
       author: robin-schneider
       changes:
 
         - sql:
             dbms: h2,postgresql
             endDelimiter: ;
-            sql: CREATE SCHEMA IF NOT EXISTS microservice_template
+            sql: CREATE SCHEMA IF NOT EXISTS spring_app_template

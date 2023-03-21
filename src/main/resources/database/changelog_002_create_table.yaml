@@ -1,11 +1,11 @@
 databaseChangeLog:
   - changeSet:
-      id: microservice-template-2
+      id: spring-app-template-2
       author: robin-schneider
       changes:
 
         - createTable:
-            schemaName: microservice_template
+            schemaName: spring_app_template
             tableName: contract
             columns:
               - column:
