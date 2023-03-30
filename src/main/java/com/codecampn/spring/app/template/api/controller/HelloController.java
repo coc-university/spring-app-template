@@ -18,5 +18,10 @@ public class HelloController {
         return message;
     }
 
+    @GetMapping("/eugen")
+    public String sayName() {
+        return "stefan";
+    }
+
 }
 
