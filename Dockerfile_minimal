@@ -1,9 +1,10 @@
 FROM openjdk:17.0.2
 
-LABEL Description="Docker Image for Spring Boot App Template"
-
 EXPOSE 8080
 
-COPY app.jar app.jar
+# after 'mvn package' created jar,
+# copy file in docker image with new name
+COPY /target/spring-app-template*.jar app.jar
 
+# run jar in docker container
 CMD [ "java","-jar","app.jar" ]
