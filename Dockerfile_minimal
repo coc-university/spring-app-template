@@ -1,0 +1,9 @@
+FROM openjdk:17.0.2
+
+LABEL Description="Docker Image for Spring Boot App Template"
+
+EXPOSE 8080
+
+COPY app.jar app.jar
+
+CMD [ "java","-jar","app.jar" ]
