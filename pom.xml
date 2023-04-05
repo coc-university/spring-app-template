@@ -22,19 +22,16 @@
 		<url>https://codecamp-n.com/</url>
 	</organization>
 
-<!--	<distributionManagement>-->
-<!--		<repository>-->
-<!--			<id>central</id>-->
-<!--			<name>libs-releases-local</name>-->
-<!--			<url>TODO</url>-->
-<!--		</repository>-->
-
-<!--		<snapshotRepository>-->
-<!--			<id>central</id>-->
-<!--			<name>libs-snapshots-local</name>-->
-<!--			<url>TODO</url>-->
-<!--		</snapshotRepository>-->
-<!--	</distributionManagement>-->
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Packages</name>
+			<url>https://maven.pkg.github.com/coc-university/spring-app-template</url>
+			<!-- add your github username and password/pat to your local settings.xml -->
+			<!-- check remote the access rights of your pat and the repository -->
+			<!-- finally, upload packages via 'mvn deploy' -->
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<java.version>17</java.version>
@@ -146,6 +143,12 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<image>
+						<!-- when you use 'mvn spring-boot:build-image' to create a docker image -->
+						<name>ghcr.io/coc-university/${project.artifactId}:${project.version}</name>
+					</image>
+				</configuration>
 			</plugin>
 
 			<plugin>

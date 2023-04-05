@@ -1,4 +1,4 @@
-name: Build and push docker image
+name: Build and push image via actions
 
 on:
   push:
@@ -43,6 +43,10 @@ jobs:
           push: true
           file: ./Dockerfile_minimal
           tags: ghcr.io/coc-university/spring-app-template:1.0.0
+
+# after git commit and push, check github action and container registry (ghcr):
+# 1) workflow run: https://github.com/coc-university/spring-app-template/actions
+# 2) docker image: https://github.com/coc-university/spring-app-template/pkgs/container/spring-app-template
 
 # access docker image locally and run container:
 # 1) create personal access token (pat) in github profile developer settings
