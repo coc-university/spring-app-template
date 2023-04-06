@@ -36,6 +36,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup docker image tag
+        id: image-tag
+        run: |
+          GIT_ID=$(git rev-parse --short HEAD)
+          TIMESTAMP=$(date '+%Y%m%d%H%M')
+          echo "GIT_ID: $GIT_ID"
+          echo "TIMESTAMP: $TIMESTAMP"
+          echo "image_tag_time_and_git_id=${TIMESTAMP}-${GIT_ID}" >> $GITHUB_OUTPUT
+        # https://docs.github.com/de/actions/using-workflows/workflow-commands-for-github-actions
+
       - name: Build docker image and push to ghcr
         uses: docker/build-push-action@v4
         with:
@@ -43,6 +53,7 @@ jobs:
           push: true
           file: ./Dockerfile_minimal
           tags: ghcr.io/coc-university/spring-app-template:1.0.0
+          # use dynamic tag via: ${{ steps.image-tag.outputs.image_tag_time_and_git_id }}
 
 # after git commit and push, check github action and container registry (ghcr):
 # 1) workflow run: https://github.com/coc-university/spring-app-template/actions
