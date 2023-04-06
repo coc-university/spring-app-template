@@ -13,8 +13,8 @@ Given example config:
 * github actions:
   * build (feature-) branches on pull requests
   * release build: use of conventional commits; docker build and push
-  * TODO in your project: add PUSH_PAT and PUSH_USERNAME to your project (settings -> Secrets and variables -> Actions)
-* dependabot config (github) for docker and maven dependencies
+  * TODO in your project: set MASTER_PUSH_TOKEN, COCREGISTRY_USER, COCREGISTRY_TOKEN, SONARQUBE_HOST, SONARQUBE_TOKEN in your project (settings -> Secrets and variables -> Actions)
+* dependabot config (github) for docker and maven dependencies (rename depdendabot_template.yml to dependabot.yml)
 
 # for developers
 ## initialize conventional commit settings local
