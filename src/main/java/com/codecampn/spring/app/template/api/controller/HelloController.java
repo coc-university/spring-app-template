@@ -23,11 +23,5 @@ public class HelloController {
         log.info(message);
         return message + "2";
     }
-
-    @GetMapping("/hello")
-    public String sayHello3() {
-        log.info(message);
-        return message + "3";
-    }
 }
 
