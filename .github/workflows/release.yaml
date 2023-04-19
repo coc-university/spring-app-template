@@ -112,5 +112,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/coc-university/spring-app-template:${{ steps.jar-version.outputs.version }}
+          tags: ghcr.io/coc-university/spring-app-template-techie-abend:${{ steps.jar-version.outputs.version }}
           build-args: RUNNABLE_JAR=app.jar
