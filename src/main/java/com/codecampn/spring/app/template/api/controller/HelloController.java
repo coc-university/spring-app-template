@@ -17,11 +17,5 @@ public class HelloController {
         log.info(message);
         return message;
     }
-
-    @GetMapping("/eugen")
-    public String sayName() {
-        return "stefan";
-    }
-
 }
 
