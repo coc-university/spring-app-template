@@ -17,5 +17,11 @@ public class HelloController {
         log.info(message);
         return message;
     }
+
+    @GetMapping("/hello")
+    public String sayHello2() {
+        log.info(message);
+        return message + "2";
+    }
 }
 
