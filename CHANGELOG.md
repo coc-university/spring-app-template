@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/coc-university/spring-app-template-techie-abend/compare/v1.1.0...v1.2.0) (2023-04-19)
+
+
+### Features
+
+* removed endpoint ([b0f8794](https://github.com/coc-university/spring-app-template-techie-abend/commit/b0f8794d1fe1df2614faec4808ba85a272c9e82f))
+
 ## [1.1.0](https://github.com/coc-university/spring-app-template-techie-abend/compare/v1.0.0...v1.1.0) (2023-04-19)
 
 
