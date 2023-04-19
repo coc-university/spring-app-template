@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/coc-university/spring-app-template-techie-abend/compare/v1.0.0...v1.1.0) (2023-04-19)
+
+
+### Features
+
+* changed docker name in workflow file ([edaf582](https://github.com/coc-university/spring-app-template-techie-abend/commit/edaf5827b9825010ce9f27a7c75394747876014c))
+
 ## 1.0.0 (2023-04-19)
 
 
