@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/coc-university/spring-app-template-techie-abend/compare/v1.2.0...v2.0.0) (2023-04-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* controller response 3
+
+### Features
+
+* controller response 3 ([b4c3542](https://github.com/coc-university/spring-app-template-techie-abend/commit/b4c3542881aea04d3e2826a1f2fedb85f37116d9))
+
 ## [1.2.0](https://github.com/coc-university/spring-app-template-techie-abend/compare/v1.1.0...v1.2.0) (2023-04-19)
 
 
