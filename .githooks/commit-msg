@@ -4,7 +4,7 @@
 # Activate by using: "> git config core.hooksPath .githooks"
 # Create a regex for a conventional commit.
 # Adapt Regex to match release-please supported messages
-convetional_commit_regex="^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|BREAKING CHANGE)(\([a-z \-]+\))?!?: .+$"
+convetional_commit_regex="^(build|chore|ci|docs|feat|feat!|fix|perf|refactor|revert|style|test|BREAKING CHANGE)(\([a-z \-]+\))?!?: .+$"
 
 # Get the commit message (the parameter we're given is just the path to the temporary file which holds the message).
 commit_message=$(cat "$1")
