@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0](https://github.com/coc-university/spring-app-template-techie-abend/compare/v2.0.0...v2.1.0) (2023-04-20)
+
+
+### Features
+
+* added ctrl resp 2 ([3113004](https://github.com/coc-university/spring-app-template-techie-abend/commit/3113004cf20649a461218df563dfee377c0faca3))
+* merged xdfghjnbvcghjcf ([fa96c84](https://github.com/coc-university/spring-app-template-techie-abend/commit/fa96c84539366027210a4a1b4564960f95c32104))
+
 ## [2.0.0](https://github.com/coc-university/spring-app-template-techie-abend/compare/v1.2.0...v2.0.0) (2023-04-20)
 
 
