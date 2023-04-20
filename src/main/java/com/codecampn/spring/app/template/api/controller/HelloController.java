@@ -21,7 +21,7 @@ public class HelloController {
     @GetMapping("/hello")
     public String sayHello2() {
         log.info(message);
-        return message + "3";
+        return message + "2";
     }
 }
 
