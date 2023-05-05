@@ -3,7 +3,7 @@ RUN mkdir -p app
 WORKDIR /app
 COPY pom.xml /app/
 COPY src /app/src
-RUN mvn clean install --file pom.xml
+RUN mvn clean install
 
 FROM openjdk:17.0.2
 LABEL Description="Docker container for Spring Boot App Template on OpenJDK17"
