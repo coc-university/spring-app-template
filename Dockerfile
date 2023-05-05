@@ -1,16 +1,19 @@
 FROM maven:3.9.1-eclipse-temurin-17-focal AS build
 RUN mkdir -p app
-RUN mkdir -p .git
 WORKDIR /app
+COPY src /app/src/
+COPY checkstyle.xml /app/
 COPY pom.xml /app/
-COPY src /app/src
+COPY .git /app/.git/
+#COPY . /app/
 RUN mvn clean install
 
 FROM openjdk:17.0.2
 LABEL Description="Docker container for Spring Boot App Template on OpenJDK17"
 
 
-COPY --from=afterlife /app/target/*.jar /home/appuser/app.jar
+COPY --from=build /app/target/*.jar /home/appuser/app.jar
+COPY README.md /home/appuser/
 
 EXPOSE 8080
 

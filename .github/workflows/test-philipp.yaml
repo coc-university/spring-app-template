@@ -1,9 +1,7 @@
 name: Release Action
 
 on:
-  push:
-    branches:
-      - container-multistage-build
+  pull_request:
     
 jobs:
   release:
