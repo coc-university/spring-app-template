@@ -35,7 +35,7 @@ jobs:
           TIMESTAMP=$(date '+%Y%m%d%H%M')
           echo "SHA: $SHA"
           echo "TIMESTAMP: $TIMESTAMP"
-          echo "::set-output name=image_tag::dev-${TIMESTAMP}-${SHA}"
+          echo "::set-output name=image_tag::prod-${TIMESTAMP}-${SHA}"
 
       #      - name: run SonarQube
       #        if: ${{ steps.release.outputs.release_created }}
@@ -58,26 +58,17 @@ jobs:
 #          docker tag spring-app-template:$VERSION ghcr.io/coc-university/spring-app-template:$VERSION
 #          docker push ghcr.io/coc-university/spring-app-template:$VERSION
 
-      - name: Login to CoC-Registry
-        if: ${{ steps.release.outputs.release_created }}
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.COCREGISTRY_USER }}
-          password: ${{ secrets.COCREGISTRY_TOKEN }}
-
-      - name: Build and push
-        if: ${{ steps.release.outputs.release_created }}
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/coc-university/spring-app-template:${{ steps.jar-version.outputs.version }}
-          build-args: RUNNABLE_JAR=app.jar
-
+      - name: Build Docker Image spring-app-template
+        if: ${{ !steps.release.outputs.release_created && success() }}
+        run: |
+          image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
+          tag=${{ steps.image-tag.outputs.image_tag }}
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
+          docker build -t $image:$tag .
+          docker push $image:$tag
 
       - name: Build Docker Image spring-app-template
-        if: success()
+        if: ${{ steps.release.outputs.release_created && success() }}
         run: |
           image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
           version=${{ steps.jar-version.outputs.version }}
