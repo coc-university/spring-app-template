@@ -3,33 +3,9 @@ name: Release Action
 on:
   push:
     branches:
-      - main
+      - container-multistage-build
 jobs:
-  build:
-    name: mvn build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'zulu'
-
-      - name: cache maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: mvn clean install
-        run: mvn clean install
-
   release:
-    needs: [ build ]
-    if: ${{ success() }}
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.releases_created }}
@@ -44,24 +20,6 @@ jobs:
           release-type: maven
           package-name: spring-app-template
 
-      - uses: actions/checkout@v3
-        if: ${{ steps.release.outputs.release_created }}
-
-      - name: Setup Java
-        if: ${{ steps.release.outputs.release_created }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'zulu'
-
-      - name: cache maven packages
-        if: ${{ steps.release.outputs.release_created }}
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
       - name: get version number
         if: ${{ steps.release.outputs.release_created }}
         run: |
@@ -69,9 +27,15 @@ jobs:
           echo "::set-output name=version::$VERSION"
         id: jar-version
 
-      - name: mvn clean install
-        if: ${{ steps.release.outputs.release_created }}
-        run: mvn clean install
+      - uses: actions/checkout@v2
+      - name: Setup Docker Image Tag
+        id: image-tag
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          TIMESTAMP=$(date '+%Y%m%d%H%M')
+          echo "SHA: $SHA"
+          echo "TIMESTAMP: $TIMESTAMP"
+          echo "::set-output name=image_tag::dev-${TIMESTAMP}-${SHA}"
 
       #      - name: run SonarQube
       #        if: ${{ steps.release.outputs.release_created }}
@@ -84,10 +48,6 @@ jobs:
       #          -Dsonar.branch.name=main \
       #          -Dsonar.java.coveragePlugin=jacoco \
       #          -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco/jacoco.xml
-
-      - name: copy jar file
-        if: ${{ steps.release.outputs.release_created }}
-        run: cp target/spring-app-template**.jar app.jar
 
 #      - name: build and push docker image
 #        if: ${{ steps.release.outputs.release_created }}
@@ -114,3 +74,14 @@ jobs:
           push: true
           tags: ghcr.io/coc-university/spring-app-template:${{ steps.jar-version.outputs.version }}
           build-args: RUNNABLE_JAR=app.jar
+
+
+      - name: Build Docker Image spring-app-template
+        if: success()
+        run: |
+          image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
+          version=${{ steps.jar-version.outputs.version }}
+          tag=${{ steps.image-tag.outputs.image_tag }}
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
+          docker build -t $image:$version:$tag .
+          docker push $image:$version:$tag
