@@ -53,5 +53,5 @@ jobs:
           version=${{ steps.jar-version.outputs.version }}
           tag=${{ steps.image-tag.outputs.image_tag }}
           echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
-          docker build -t $image:$version:$tag .
-          docker push $image:$version:$tag
+          docker build -t $image:$version$tag .
+          docker push $image:$version$tag
