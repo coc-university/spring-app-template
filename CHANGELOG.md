@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.1.0...v1.2.0) (2023-05-10)
+
+
+### Features
+
+* reduce action ([4f9fbf9](https://github.com/coc-university/spring-app-template-philipp/commit/4f9fbf93e6c7b39cb8263a642238c8be26bf0fea))
+* simplify-action ([662b399](https://github.com/coc-university/spring-app-template-philipp/commit/662b399de7d183221c9983d6a9f655f231ab8d8f))
+
 ## [1.1.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.0.0...v1.1.0) (2023-05-10)
 
 
