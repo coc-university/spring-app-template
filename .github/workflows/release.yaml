@@ -1,4 +1,4 @@
-name: Release Action Philipp
+name: Release Action
 
 on:
   push:
@@ -33,25 +33,17 @@ jobs:
         run: |
           SHA=$(git rev-parse --short HEAD)
           TIMESTAMP=$(date '+%Y%m%d%H%M')
+          VERSION=${{ steps.jar-version.outputs.version }}
           echo "SHA: $SHA"
           echo "TIMESTAMP: $TIMESTAMP"
-          echo "::set-output name=image_tag::prod-${TIMESTAMP}-${SHA}"
+          echo "VERSION: $VERSION"
+          echo "::set-output name=image_tag::prod-${VERSION}-${TIMESTAMP}-${SHA}"
 
-      - name: Build Docker Image spring-app-template without versioning
-        if: ${{ !steps.release.outputs.release_created && success() }}
+      - name: Build and Push Docker Image
+        if: ${{ steps.release.outputs.release_created && success() }}
         run: |
           image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
           tag=${{ steps.image-tag.outputs.image_tag }}
           echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
           docker build -t $image:$tag .
           docker push $image:$tag
-
-      - name: Build Docker Image spring-app-template with versioning
-        if: ${{ steps.release.outputs.release_created && success() }}
-        run: |
-          image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
-          version=${{ steps.jar-version.outputs.version }}
-          tag=${{ steps.image-tag.outputs.image_tag }}
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
-          docker build -t $image:$version:$tag .
-          docker push $image:$version:$tag
