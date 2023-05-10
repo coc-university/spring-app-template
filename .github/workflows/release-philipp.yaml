@@ -1,0 +1,116 @@
+name: Release Action Philipp
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: mvn build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: cache maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: mvn clean install
+        run: mvn clean install
+
+  release:
+    needs: [ build ]
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.releases_created }}
+      release_major: ${{ steps.release.outputs.major }}
+      release_minor: ${{ steps.release.outputs.minor }}
+      release_patch: ${{ steps.release.outputs.patch }}
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          token: ${{ secrets.MASTER_PUSH_TOKEN }}
+          release-type: maven
+          package-name: spring-app-template
+
+      - uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Setup Java
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: cache maven packages
+        if: ${{ steps.release.outputs.release_created }}
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: get version number
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=version::$VERSION"
+        id: jar-version
+
+      - name: mvn clean install
+        if: ${{ steps.release.outputs.release_created }}
+        run: mvn clean install
+
+      #      - name: run SonarQube
+      #        if: ${{ steps.release.outputs.release_created }}
+      #        run: |
+      #          mvn sonar:sonar \
+      #          -Dsonar.projectName=spring-app-template \
+      #          -Dsonar.projectKey=coc-universe_spring-app-template \
+      #          -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }} \
+      #          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }} \
+      #          -Dsonar.branch.name=main \
+      #          -Dsonar.java.coveragePlugin=jacoco \
+      #          -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco/jacoco.xml
+
+      - name: copy jar file
+        if: ${{ steps.release.outputs.release_created }}
+        run: cp target/spring-app-template**.jar app.jar
+
+#      - name: build and push docker image
+#        if: ${{ steps.release.outputs.release_created }}
+#        run: |
+#          VERSION=${{ steps.jar-version.outputs.version }}
+#          docker build -t spring-app-template:$VERSION . --build-arg RUNNABLE_JAR=app.jar --no-cache
+#          echo ${{ secrets.PUSH_PAT }} | docker login ghcr.io -u ${{ secrets.PUSH_USERNAME }} --password-stdin
+#          docker tag spring-app-template:$VERSION ghcr.io/coc-university/spring-app-template:$VERSION
+#          docker push ghcr.io/coc-university/spring-app-template:$VERSION
+
+      - name: Login to CoC-Registry
+        if: ${{ steps.release.outputs.release_created }}
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.COCREGISTRY_USER }}
+          password: ${{ secrets.COCREGISTRY_TOKEN }}
+
+      - name: Build and push
+        if: ${{ steps.release.outputs.release_created }}
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/coc-university/spring-app-template:${{ steps.jar-version.outputs.version }}
+          build-args: RUNNABLE_JAR=app.jar
