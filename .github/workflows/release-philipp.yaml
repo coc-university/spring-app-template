@@ -5,31 +5,7 @@ on:
     branches:
       - main
 jobs:
-  build:
-    name: mvn build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'zulu'
-
-      - name: cache maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: mvn clean install
-        run: mvn clean install
-
   release:
-    needs: [ build ]
-    if: ${{ success() }}
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.releases_created }}
@@ -44,24 +20,6 @@ jobs:
           release-type: maven
           package-name: spring-app-template
 
-      - uses: actions/checkout@v3
-        if: ${{ steps.release.outputs.release_created }}
-
-      - name: Setup Java
-        if: ${{ steps.release.outputs.release_created }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'zulu'
-
-      - name: cache maven packages
-        if: ${{ steps.release.outputs.release_created }}
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
       - name: get version number
         if: ${{ steps.release.outputs.release_created }}
         run: |
@@ -69,48 +27,31 @@ jobs:
           echo "::set-output name=version::$VERSION"
         id: jar-version
 
-      - name: mvn clean install
-        if: ${{ steps.release.outputs.release_created }}
-        run: mvn clean install
+      - uses: actions/checkout@v2
+      - name: Setup Docker Image Tag
+        id: image-tag
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          TIMESTAMP=$(date '+%Y%m%d%H%M')
+          echo "SHA: $SHA"
+          echo "TIMESTAMP: $TIMESTAMP"
+          echo "::set-output name=image_tag::prod-${TIMESTAMP}-${SHA}"
 
-      #      - name: run SonarQube
-      #        if: ${{ steps.release.outputs.release_created }}
-      #        run: |
-      #          mvn sonar:sonar \
-      #          -Dsonar.projectName=spring-app-template \
-      #          -Dsonar.projectKey=coc-universe_spring-app-template \
-      #          -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }} \
-      #          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }} \
-      #          -Dsonar.branch.name=main \
-      #          -Dsonar.java.coveragePlugin=jacoco \
-      #          -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco/jacoco.xml
+      - name: Build Docker Image spring-app-template without versioning
+        if: ${{ !steps.release.outputs.release_created && success() }}
+        run: |
+          image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
+          tag=${{ steps.image-tag.outputs.image_tag }}
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
+          docker build -t $image:$tag .
+          docker push $image:$tag
 
-      - name: copy jar file
-        if: ${{ steps.release.outputs.release_created }}
-        run: cp target/spring-app-template**.jar app.jar
-
-#      - name: build and push docker image
-#        if: ${{ steps.release.outputs.release_created }}
-#        run: |
-#          VERSION=${{ steps.jar-version.outputs.version }}
-#          docker build -t spring-app-template:$VERSION . --build-arg RUNNABLE_JAR=app.jar --no-cache
-#          echo ${{ secrets.PUSH_PAT }} | docker login ghcr.io -u ${{ secrets.PUSH_USERNAME }} --password-stdin
-#          docker tag spring-app-template:$VERSION ghcr.io/coc-university/spring-app-template:$VERSION
-#          docker push ghcr.io/coc-university/spring-app-template:$VERSION
-
-      - name: Login to CoC-Registry
-        if: ${{ steps.release.outputs.release_created }}
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.COCREGISTRY_USER }}
-          password: ${{ secrets.COCREGISTRY_TOKEN }}
-
-      - name: Build and push
-        if: ${{ steps.release.outputs.release_created }}
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/coc-university/spring-app-template:${{ steps.jar-version.outputs.version }}
-          build-args: RUNNABLE_JAR=app.jar
+      - name: Build Docker Image spring-app-template with versioning
+        if: ${{ steps.release.outputs.release_created && success() }}
+        run: |
+          image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
+          version=${{ steps.jar-version.outputs.version }}
+          tag=${{ steps.image-tag.outputs.image_tag }}
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
+          docker build -t $image:$version:$tag .
+          docker push $image:$version:$tag
