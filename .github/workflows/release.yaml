@@ -1,0 +1,48 @@
+name: Release Action
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.releases_created }}
+      release_major: ${{ steps.release.outputs.major }}
+      release_minor: ${{ steps.release.outputs.minor }}
+      release_patch: ${{ steps.release.outputs.patch }}
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          token: ${{ secrets.MASTER_PUSH_TOKEN }}
+          release-type: maven
+          package-name: spring-app-template
+
+      - name: get version number
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "::set-output name=version::$VERSION"
+        id: jar-version
+
+      - uses: actions/checkout@v2
+      - name: Setup Docker Image Tag
+        id: image-tag
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          TIMESTAMP=$(date '+%Y%m%d%H%M')
+          echo "SHA: $SHA"
+          echo "TIMESTAMP: $TIMESTAMP"
+          echo "::set-output name=image_tag::prod-${TIMESTAMP}-${SHA}"
+
+      - name: Build Docker Image spring-app-template
+        run: |
+          image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
+          tag=${{ steps.image-tag.outputs.image_tag }}
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
+          docker build -t $image:$tag .
+        if: ${{ steps.release.outputs.release_created && success() }}
+          version=${{ steps.jar-version.outputs.version }}
+          docker push $image:$version$tag
