@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.0.0...v1.1.0) (2023-05-10)
+
+
+### Features
+
+* adjust dockerfile and release action ([0f6336e](https://github.com/coc-university/spring-app-template-philipp/commit/0f6336e46531478854a6a729db4b9fecbe4c57a3))
+
 ## 1.0.0 (2023-05-10)
 
 
