@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.5.0...v1.6.0) (2023-05-11)
+
+
+### Features
+
+* adjust build action to new docker file ([64ecc06](https://github.com/coc-university/spring-app-template-philipp/commit/64ecc0616ba33a0c5e681915fa770fc881cb425b))
+
 ## [1.5.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.4.0...v1.5.0) (2023-05-11)
 
 
