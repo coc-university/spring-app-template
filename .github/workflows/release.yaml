@@ -24,7 +24,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "::set-output name=version::$VERSION"
+          echo "::set-output name=version::${VERSION}"
         id: jar-version
 
       - uses: actions/checkout@v2
@@ -47,8 +47,7 @@ jobs:
         if: ${{ steps.release.outputs.release_created && success() }}
         run: |
           REPOSITORY=${{ github.repository}}
-          IMAGE=ghcr.io/coc-ghcr.io/$REPOSITORY
-          echo image
+          IMAGE=ghcr.io/coc-ghcr.io/${REPOSITORY}
           TAG=${{ steps.image-tag.outputs.image_tag }}
           echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
           docker build -t $IMAGE:$TAG .
