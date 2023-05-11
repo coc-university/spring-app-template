@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     name: mvn clean install
     steps:
+      - uses: actions/checkout@v3
+
       - name: Build Docker Image
         run: |
           echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
