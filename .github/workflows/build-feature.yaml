@@ -1,9 +1,7 @@
-name: Maven build and test (Pull request)
+name: Build on pull request
 
 on:
   pull_request:
-    branches:
-      - develop
 
 jobs:
   build-feature:
@@ -12,42 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'zulu'
-
-      - name: cache maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      - name: mvn clean install
-        run: mvn clean install
-
-#      - name: run SonarQube
-#        run: |
-#          mvn sonar:sonar \
-#          -Dsonar.projectName=spring-app-template \
-#          -Dsonar.projectKey=coc-universe_spring-app-template \
-#          -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }} \
-#          -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }} \
-#          -Dsonar.branch.name=main \
-#          -Dsonar.java.coveragePlugin=jacoco \
-#          -Dsonar.coverage.jacoco.xmlReportPaths=target/jacoco/jacoco.xml
-
-      - name: generate test summary
-        if: ${{ failure() }}
+      - name: Build Docker Image
         run: |
-          mvn surefire-report:report-only -DshowSuccess=false
-          mvn site -DgenerateReports=false
-
-      - name: upload test summary
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-results
-          path: target/site
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
+          docker build .
