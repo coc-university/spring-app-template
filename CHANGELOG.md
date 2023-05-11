@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.2.0...v1.3.0) (2023-05-11)
+
+
+### Features
+
+* delete old release action ([633bf28](https://github.com/coc-university/spring-app-template-philipp/commit/633bf280a9e212496c32dfedb23c825189fa7aef))
+
 ## [1.2.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.1.0...v1.2.0) (2023-05-10)
 
 
