@@ -40,8 +40,9 @@ jobs:
           echo "::set-output name=image_tag::prod-${VERSION}-${TIMESTAMP}-${SHA}"
 
       - name: Print Action Info
-        run: |
-          echo ${{ github }}
+        env:
+          GITHUB_INFO: ${{ toJson(github) }}
+        run: echo "$GITHUB_INFO"
 
       - name: Build and Push Docker Image
         if: ${{ steps.release.outputs.release_created && success() }}
