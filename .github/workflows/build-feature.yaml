@@ -6,7 +6,6 @@ on:
 jobs:
   build-feature:
     runs-on: ubuntu-latest
-    name: mvn clean install
     steps:
       - uses: actions/checkout@v3
 
