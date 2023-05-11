@@ -39,11 +39,17 @@ jobs:
           echo "VERSION: $VERSION"
           echo "::set-output name=image_tag::prod-${VERSION}-${TIMESTAMP}-${SHA}"
 
+      - name: Print Action Info
+        run: |
+          echo ${{ github }}
+
       - name: Build and Push Docker Image
         if: ${{ steps.release.outputs.release_created && success() }}
         run: |
-          image=ghcr.io/coc-ghcr.io/coc-university/spring-app-template
-          tag=${{ steps.image-tag.outputs.image_tag }}
+          REPOSITORY=${{ github.repository}}
+          IMAGE=ghcr.io/coc-ghcr.io/$REPOSITORY
+          echo image
+          TAG=${{ steps.image-tag.outputs.image_tag }}
           echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
-          docker build -t $image:$tag .
-          docker push $image:$tag
+          docker build -t $IMAGE:$TAG .
+          docker push $IMAGE:$TAG
