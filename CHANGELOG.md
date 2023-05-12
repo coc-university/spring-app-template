@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.9.0...v1.10.0) (2023-05-12)
+
+
+### Features
+
+* use release version ([96db64a](https://github.com/coc-university/spring-app-template-philipp/commit/96db64acc7a3b3cdaae531d4740881bdbebd06db))
+
 ## [1.9.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.8.0...v1.9.0) (2023-05-12)
 
 
