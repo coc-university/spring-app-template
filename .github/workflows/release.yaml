@@ -23,16 +23,13 @@ jobs:
       - name: get version number
         if: ${{ steps.release.outputs.release_created }}
         run: |
-          echo "Version number"
-          echo "${{ steps.release.outputs.major }}"
           MAJOR=${{ steps.release.outputs.major }}
           MINOR=${{ steps.release.outputs.minor }}
           PATCH=${{ steps.release.outputs.patch }}
-          VERSIONTWO=$MAJOR-$MINOR-$PATCH
-          echo "$VERSIONTWO"
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "::set-output name=version::${VERSION}"
-        id: jar-version
+          RELEASE_VERSION=$MAJOR.$MINOR.$PATCH
+          echo "$RELEASE_VERSION"
+          echo "{release-version}={$VERSION}" >>$GITHUB_OUTPUT
+        id: release-version
 
       - uses: actions/checkout@v3
       - name: Setup Docker Image Tag
@@ -56,6 +53,8 @@ jobs:
         run: |
           REPOSITORY=${{ github.repository}}
           IMAGE=ghcr.io/coc-ghcr.io/${REPOSITORY}
+          VERSION=${{ steps.release-version.output.release-version}}
+          echo "$VERSION"
           TAG=${{ steps.image-tag.outputs.image_tag }}
           echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
           docker build -t $IMAGE:$TAG .
