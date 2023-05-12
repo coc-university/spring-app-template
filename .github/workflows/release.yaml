@@ -41,7 +41,7 @@ jobs:
           echo "SHA: $SHA"
           echo "TIMESTAMP: $TIMESTAMP"
           echo "VERSION: $VERSION"
-          echo "image_tag=v${VERSION}-prod-${TIMESTAMP}-${SHA}"
+          echo "image_tag=v${VERSION}-prod-${TIMESTAMP}-${SHA}" >>$GITHUB_OUTPUT
 
       - name: Print Action Info
         env:
