@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.7.0...v1.8.0) (2023-05-12)
+
+
+### Features
+
+* disable build action ([7757840](https://github.com/coc-university/spring-app-template-philipp/commit/77578402a642667e4997d01bcef24fad6728147a))
+* next try ([4018bef](https://github.com/coc-university/spring-app-template-philipp/commit/4018befc7db8805ec27ab44dd2fe3e2a7421c22b))
+
 ## [1.7.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.6.0...v1.7.0) (2023-05-12)
 
 
