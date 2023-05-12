@@ -25,6 +25,11 @@ jobs:
         run: |
           echo "Version number"
           echo "${{ steps.release.outputs.major }}"
+          MAJOR=${{ steps.release.outputs.major }}
+          MINOR=${{ steps.release.outputs.minor }}
+          PATCH=${{ steps.release.outputs.patch }}
+          VERSIONTWO=$MAJOR-$MINOR-$PATCH
+          echo "$VERSIONTWO"
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "::set-output name=version::${VERSION}"
         id: jar-version
