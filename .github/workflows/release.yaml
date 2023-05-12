@@ -23,6 +23,8 @@ jobs:
       - name: get version number
         if: ${{ steps.release.outputs.release_created }}
         run: |
+          echo "Version number"
+          echo "$release_major.$release_minor.$release_patch"
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "::set-output name=version::${VERSION}"
         id: jar-version
