@@ -47,7 +47,7 @@ jobs:
 
       - uses: actions/checkout@v3
       - name: Setup Docker Image Tag at Release
-        if: ${{ !steps.release.outputs.release_created && success() }}
+        if: ${{ steps.release.outputs.release_created && success() }}
         id: image-tag-release
         run: |
           IMAGE=ghcr.io/coc-ghcr.io/${{ github.repository }}          
