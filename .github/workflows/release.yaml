@@ -41,7 +41,7 @@ jobs:
           echo "SHA: $SHA"
           echo "TIMESTAMP: $TIMESTAMP"
           echo "RELEASE VERSION: $RELEASE_VERSION"
-          echo "image_tag=IMAGE-v${VERSION}-prod-${TIMESTAMP}-${SHA}" >>$GITHUB_OUTPUT
+          echo "image_tag=$IMAGE-v${VERSION}-prod-${TIMESTAMP}-${SHA}" >>$GITHUB_OUTPUT
 
       - name: Build and Push Docker Image
         if: ${{ steps.release.outputs.release_created && success() }}
