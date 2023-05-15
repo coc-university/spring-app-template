@@ -11,7 +11,7 @@
 
 	<groupId>com.codecampn</groupId>
 	<artifactId>spring-app-template</artifactId>
-	<version>1.17.0</version>
+	<version>1.17.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>spring-app-template</name>
