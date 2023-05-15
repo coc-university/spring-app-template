@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.14.0...v1.15.0) (2023-05-12)
+
+
+### Features
+
+* make it nice ([e2722c4](https://github.com/coc-university/spring-app-template-philipp/commit/e2722c469fe831a2550394068f9bdbfaf116f8fa))
+
 ## [1.14.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.13.0...v1.14.0) (2023-05-12)
 
 
