@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.19.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.18.0...v1.19.0) (2023-05-15)
+
+
+### Features
+
+* fix dumb error ([6bf2686](https://github.com/coc-university/spring-app-template-philipp/commit/6bf26861d2ffa853916333ca8e522f5d945f2469))
+
 ## [1.18.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.17.1...v1.18.0) (2023-05-15)
 
 
