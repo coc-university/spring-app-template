@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.17.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.16.0...v1.17.0) (2023-05-15)
+
+
+### Features
+
+* new push step ([256b3f7](https://github.com/coc-university/spring-app-template-philipp/commit/256b3f7d1207602bc434d8c47962acfeb1f64b6c))
+
 ## [1.16.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.15.0...v1.16.0) (2023-05-15)
 
 
