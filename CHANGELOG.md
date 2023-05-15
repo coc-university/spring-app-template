@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.15.0...v1.16.0) (2023-05-15)
+
+
+### Features
+
+* typo fix ([10699ef](https://github.com/coc-university/spring-app-template-philipp/commit/10699ef8046c80f8a51f82fc88e43390176a00c9))
+
 ## [1.15.0](https://github.com/coc-university/spring-app-template-philipp/compare/v1.14.0...v1.15.0) (2023-05-12)
 
 
