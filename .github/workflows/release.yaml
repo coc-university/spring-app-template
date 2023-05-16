@@ -42,6 +42,7 @@ jobs:
           echo "SHA: $SHA"
           echo "TIMESTAMP: $TIMESTAMP"
           echo "image_tag=$IMAGE:${TIMESTAMP}-${SHA}" >>$GITHUB_ENV
+          echo "Tag name from github.ref_name: ${{ github.ref_name }}"
 
       - uses: actions/checkout@v3
       - name: Setup Docker Image Tag at Release
@@ -57,6 +58,11 @@ jobs:
           echo "RELEASE VERSION: $VERSION"
           echo "image_tag=$IMAGE:v${VERSION}" >>$GITHUB_ENV
           echo "Tag name from github.ref_name: ${{ github.ref_name }}"
+
+      - name: Print Action Info
+        env:
+          GITHUB_INFO: ${{ toJson(github) }}
+        run: echo "$GITHUB_INFO"
 
       - name: Build and Push Docker Image
 #        if: ${{ steps.release.outputs.release_created && success() }}
