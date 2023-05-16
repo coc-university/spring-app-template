@@ -37,13 +37,11 @@ jobs:
         id: image-tag-no-release
         run: |
           IMAGE=ghcr.io/coc-ghcr.io/${{ github.repository }}          
-          VERSION=${{ steps.release-version.outputs.release_version }}         
           TIMESTAMP=$(date '+%Y%m%d%H%M')
           SHA=$(git rev-parse --short HEAD)
           echo "SHA: $SHA"
           echo "TIMESTAMP: $TIMESTAMP"
-          echo "RELEASE VERSION: $VERSION"
-          echo "image_tag=$IMAGE:${TIMESTAMP}-${SHA}" >>$GITHUB_OUTPUT
+          echo "image_tag=$IMAGE:${TIMESTAMP}-${SHA}" >>$GITHUB_ENV
 
       - uses: actions/checkout@v3
       - name: Setup Docker Image Tag at Release
@@ -57,12 +55,13 @@ jobs:
           echo "SHA: $SHA"
           echo "TIMESTAMP: $TIMESTAMP"
           echo "RELEASE VERSION: $VERSION"
-          echo "image_tag=$IMAGE:v${VERSION}" >>$GITHUB_OUTPUT
+          echo "image_tag=$IMAGE:v${VERSION}" >>$GITHUB_ENV
+          echo "Tag name from github.ref_name: ${{ github.ref_name }}"
 
       - name: Build and Push Docker Image
-        if: ${{ steps.release.outputs.release_created && success() }}
+#        if: ${{ steps.release.outputs.release_created && success() }}
         run: |
-          TAG=${{ steps.image-tag.outputs.image_tag }}
+          TAG=$image_tag
           echo ${{ secrets.GITHUB_TOKEN }} | docker login -u ${{ github.actor }} --password-stdin ghcr.io
           docker build -t $TAG .
           docker push $TAG
