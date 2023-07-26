@@ -1,4 +1,4 @@
-name: Release Action Philipp
+name: Release Action
 
 on:
   push:
