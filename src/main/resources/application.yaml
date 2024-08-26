@@ -7,6 +7,10 @@ server:
 spring:
   profiles:
     active: ${SPRING_PROFILES:default, dev}
+  security:
+    user:
+      name: test
+      password: test
   datasource:
     # url: jdbc:postgresql://${DB_HOSTNAME:localhost}:${DB_PORT:5432}/${DB_NAME:spring-template}
     # http://www.h2database.com/html/features.html

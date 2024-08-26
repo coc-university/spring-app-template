@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.0</version>
+		<version>3.3.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -22,41 +22,31 @@
 		<url>https://codecamp-n.com/</url>
 	</organization>
 
-<!--	<distributionManagement>-->
-<!--		<repository>-->
-<!--			<id>central</id>-->
-<!--			<name>libs-releases-local</name>-->
-<!--			<url>TODO</url>-->
-<!--		</repository>-->
-
-<!--		<snapshotRepository>-->
-<!--			<id>central</id>-->
-<!--			<name>libs-snapshots-local</name>-->
-<!--			<url>TODO</url>-->
-<!--		</snapshotRepository>-->
-<!--	</distributionManagement>-->
-
 	<properties>
-		<java.version>17</java.version>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<java.version>21</java.version>
 	</properties>
 
 	<dependencies>
 
 		<dependency>
-			<!-- dependency for normal rest api and tomcat server -->
-			<!-- if you need reactive stack, use webflux with netty -->
+			<!-- for normal rest api and tomcat server -->
+			<!-- if you need a non-blocking/streaming/reactive stack, use webflux with netty -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
 		<dependency>
-			<!-- the springdoc-openapi-ui dependency don't work with spring boot 3.0 (only 2.7) -->
-			<!-- but we can use instead the webmvc-ui dependency: https://springdoc.org/v2/ -->
+			<!-- general security dependency for web api's -->
+			<!-- for oauth with jwt add also spring-boot-starter-oauth2-resource-server -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<!-- for swagger-ui, check props in yaml, https://springdoc.org/ -->
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.1.0</version>
+			<version>2.6.0</version>
 		</dependency>
 
 		<dependency>
@@ -66,7 +56,7 @@
 			<!-- it's also used by the generated V1Api interface -->
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
-			<version>2.2.9</version>
+			<version>2.2.22</version>
 		</dependency>
 
 		<dependency>
@@ -128,6 +118,18 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -152,7 +154,7 @@
 				<!-- generate api classes/interfaces from yaml spec (contract first) -->
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>6.5.0</version>
+				<version>7.7.0</version>
 				<configuration>
 					<generatorName>spring</generatorName>
 					<output>${project.build.directory}/generated-sources</output>
@@ -188,7 +190,7 @@
 				<!-- generate report of violated code conventions -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.4.0</version>
 				<configuration>
 					<configLocation>checkstyle.xml</configLocation>
 					<sourceDirectories>

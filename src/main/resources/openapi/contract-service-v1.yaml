@@ -13,18 +13,16 @@ servers:
     description: fiktive url
 
 tags:
-  - name: v1
+  - name: v1 api
 
 paths:
   /v1/contract:
     get:
       tags:
-        - v1
+        - contract
       summary: Abfragen des Vertrags
       description: Abfragen des Vertrags
       operationId: getContract
-      security:
-        - OAuth2: []
       parameters:
         - in: query
           name: name
@@ -87,4 +85,18 @@ components:
         error_code:
           type: integer
           format: int32
+
+  # define security schemes
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    formLogin:
+      type: http
+      scheme: form
+
+# use the security schemes and apply them globally (not on endpoint level)
+security:
+  - basicAuth: []
+  - formLogin: []
 

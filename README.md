@@ -2,13 +2,15 @@
 CodeCamp:N Spring Boot template
 
 Given example config:
-* Spring Boot 3, Java 17
-* H2 database, Hibernate
-* Liquibase
+* Spring Boot 3, Java 21
+* REST API
+* Security with Form Login and HTTP Basic
+* H2 database, Hibernate (JPA), Liquibase
+* Tests for all layers
 * Swagger
 * Management endpoint (info, health, ...)
 * OpenAPI yaml example for code generation of example REST Controller
-* checkstyle
+* Checkstyle
 * environment variables with defaults in application.yml
 * github actions:
   * build (feature-) branches on pull requests
@@ -22,6 +24,3 @@ Given example config:
 
 ## run from command line
 `mvn spring-boot:run -Dspring-boot.run.profiles=dev`
-
-## swagger
-http://localhost:8080/swagger-ui/index.html#/

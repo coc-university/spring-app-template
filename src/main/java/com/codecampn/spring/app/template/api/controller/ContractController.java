@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class ContractController implements V1Api {
+public class ContractController implements ContractApi {
 
     private final ContractService contractService;
 

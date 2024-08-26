@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,7 +28,10 @@ class ContractControllerTest {
     @Test
     void shouldReturnContractResponse() throws Exception {
         when(contractService.findContract(any())).thenReturn(new ContractResponse().title("Versicherung ABC"));
-        mockMvc.perform(get("/v1/contract").param("name", "Versicherung ABC"))
+        mockMvc.perform(get("/v1/contract")
+                        .param("name", "Versicherung ABC")
+                        .with(httpBasic("test","test"))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", is("Versicherung ABC")));
     }
