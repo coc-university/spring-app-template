@@ -3,13 +3,16 @@
 
 Funktionalität: Abruf eines Vertrags
 
+  Vorbedingungen:
+    Angenommen es geht um den Endpunkt "/v1/contract"
+
   Szenario: Erfolgreicher Abruf des Vertrags
-    Wenn ich authentifiziert bin
-    Und ich den Vertrag abrufe
+    Angenommen ich bin authentifiziert
+    Wenn ich den Vertrag abrufe
     Dann ist der Http Status Code 200
     Und der Body ist korrekt
 
   Szenario: Abruf des Vertrags ohne Authentifizierung
-    Wenn ich nicht authentifiziert bin
-    Und ich den Vertrag abrufe
+    Angenommen ich bin nicht authentifiziert
+    Wenn ich den Vertrag abrufe
     Dann ist der Http Status Code 401

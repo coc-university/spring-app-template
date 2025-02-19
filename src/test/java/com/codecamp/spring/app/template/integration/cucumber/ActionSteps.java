@@ -14,29 +14,29 @@ import java.net.URI;
 @Slf4j
 public class ActionSteps {
 
-    private TestRestTemplate testRestTemplate;
-
     @LocalServerPort
     private int port;
 
-    @Wenn("ich authentifiziert bin")
-    public void withAuth() {
-        testRestTemplate = new TestRestTemplate().withBasicAuth("test", "test");
-    }
 
-    @Wenn("ich nicht authentifiziert bin")
-    public void withoutAuth() {
-        testRestTemplate = new TestRestTemplate();
-    }
-
-    @Und("ich den Vertrag abrufe")
+    @Wenn("ich den Vertrag abrufe")
     public void sendRequest() {
+
+        TestRestTemplate testRestTemplate = new TestRestTemplate();
+        if (World.isAuthenticated) {
+            testRestTemplate = testRestTemplate.withBasicAuth("test", "test");
+        }
+
+        World.responseEntity = testRestTemplate.getForEntity(uri(), ContractResponse.class);
+    }
+
+    private URI uri() {
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:" + port + "/v1/contract")
+                .fromUriString("http://localhost:" + port + World.endpoint)
                 .queryParam("name", "Versicherung ABC")
                 .build()
                 .toUri();
-        World.responseEntity = testRestTemplate.getForEntity(uri, ContractResponse.class);
+        log.info("URI: {}", uri);
+        return uri;
     }
 
 }
