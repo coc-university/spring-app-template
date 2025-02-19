@@ -8,11 +8,19 @@ Funktionalität: Abruf eines Vertrags
 
   Szenario: Erfolgreicher Abruf des Vertrags
     Angenommen ich bin authentifiziert
-    Wenn ich den Vertrag abrufe
+    Und es geht um den Vertrag "Versicherung ABC"
+    Wenn ich den Vertrag versuche abzurufen
     Dann ist der Http Status Code 200
     Und der Body ist korrekt
 
+  Szenario: Vertrag wird nicht gefunden
+    Angenommen ich bin authentifiziert
+    Und es geht um den Vertrag "Versicherung DEF"
+    Wenn ich den Vertrag versuche abzurufen
+    Dann ist der Http Status Code 404
+
   Szenario: Abruf des Vertrags ohne Authentifizierung
     Angenommen ich bin nicht authentifiziert
-    Wenn ich den Vertrag abrufe
+    Und es geht um den Vertrag "Versicherung ABC"
+    Wenn ich den Vertrag versuche abzurufen
     Dann ist der Http Status Code 401

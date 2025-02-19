@@ -19,4 +19,9 @@ public class ArrangeWorldSteps {
         World.isAuthenticated = false;
     }
 
+    @Angenommen("es geht um den Vertrag {string}")
+    public void contract(String contract) {
+        World.contractName = contract;
+    }
+
 }
