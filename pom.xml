@@ -215,8 +215,8 @@
 						<configuration>
 							<inputSpec>${project.basedir}/src/main/resources/openapi/contract-service-v1.yaml
 							</inputSpec>
-							<apiPackage>com.codecampn.spring.app.template.api.controller</apiPackage>
-							<modelPackage>com.codecampn.spring.app.template.api.model</modelPackage>
+							<apiPackage>com.codecamp.spring.app.template.api.controller</apiPackage>
+							<modelPackage>com.codecamp.spring.app.template.api.model</modelPackage>
 						</configuration>
 					</execution>
 				</executions>
