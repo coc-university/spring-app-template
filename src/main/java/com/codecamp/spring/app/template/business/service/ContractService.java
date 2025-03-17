@@ -7,6 +7,7 @@ import com.codecamp.spring.app.template.db.repository.ContractRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 @Slf4j
@@ -15,11 +16,12 @@ public class ContractService {
 
     private final ContractRepository contractRepository;
 
-    public ContractResponse findContract(String name) {
-        Contract contract = contractRepository.findContractByName(name)
-                .orElseThrow(() -> new ContractNotFoundException("No contract found with name: " + name));
-        log.info("found contract with name: {}", contract.getName());
-        return mapContractToContractResponse(contract);
+    public Mono<ContractResponse> findContract(String name) {
+        return contractRepository.findContractByName(name)
+                .switchIfEmpty(Mono.error(new ContractNotFoundException("No contract found with name: " + name)))
+                .map(this::mapContractToContractResponse)
+                .doOnSuccess(contractResponse ->
+                        log.info("found contract with name: {}", contractResponse.getTitle()));
     }
 
     // decouple internal structure from the outside (entity to response DTO)

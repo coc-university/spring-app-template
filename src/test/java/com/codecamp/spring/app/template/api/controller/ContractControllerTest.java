@@ -4,35 +4,50 @@ import com.codecamp.spring.app.template.api.model.ContractResponse;
 import com.codecamp.spring.app.template.business.service.ContractService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
-import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = ContractController.class) // slice test
+@WithMockUser
+@WebFluxTest(controllers = ContractController.class) // slice test
 class ContractControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
 
-    @MockBean
+    @MockitoBean
     private ContractService contractService;
 
     @Test
-    void shouldReturnContractResponse() throws Exception {
-        when(contractService.findContract(any())).thenReturn(new ContractResponse().title("Versicherung ABC"));
-        mockMvc.perform(get("/v1/contract")
-                        .param("name", "Versicherung ABC")
-                        .with(httpBasic("test","test"))
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is("Versicherung ABC")));
+    void shouldReturnContractResponse() {
+        when(contractService.findContract(any()))
+                .thenReturn(Mono.just(new ContractResponse().title("Versicherung ABC")));
+
+        webTestClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path("/v1/contract")
+                                .queryParam("name", "Versicherung ABC")
+                                .build())
+                .exchange()
+                .expectStatus()
+                .isOk();
+    }
+
+    @Test
+    void shouldReturnContractResponse_v2() {
+        when(contractService.findContract(any()))
+                .thenReturn(Mono.just(new ContractResponse().title("Versicherung ABC")));
+
+        Mono<ContractResponse> responseMono = contractService.findContract("Versicherung ABC");
+        StepVerifier.create(responseMono)
+                .expectNextMatches(contractResponse -> contractResponse.getTitle().equals("Versicherung ABC"))
+                .verifyComplete();
     }
 }

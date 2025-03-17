@@ -18,7 +18,7 @@ public class ContractController implements ContractApi {
             String name,
             ServerWebExchange exchange
     ) {
-        return Mono.just(contractService.findContract(name));
+        return contractService.findContract(name);
     }
 
 }

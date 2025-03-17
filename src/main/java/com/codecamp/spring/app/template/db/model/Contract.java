@@ -1,21 +1,18 @@
 package com.codecamp.spring.app.template.db.model;
 
-import jakarta.persistence.*;
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.UUID;
 
-@Entity
-@Table(name = "contract")
+@Table(schema = "spring_app_template", name = "contract")
 public class Contract {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
     @Getter
-    @Column(name = "name", nullable = false)
     private String name;
 
     public Contract() {
@@ -23,5 +20,6 @@ public class Contract {
 
     public Contract(String name) {
         this.name = name;
+        this.id = UUID.randomUUID();
     }
 }

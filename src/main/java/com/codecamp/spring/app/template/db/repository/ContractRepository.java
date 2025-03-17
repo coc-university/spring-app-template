@@ -1,14 +1,16 @@
 package com.codecamp.spring.app.template.db.repository;
 
 import com.codecamp.spring.app.template.db.model.Contract;
-import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ContractRepository extends ListCrudRepository<Contract, UUID> {
+@EnableR2dbcRepositories
+public interface ContractRepository extends R2dbcRepository<Contract, UUID> {
 
-    Optional<Contract> findContractByName(String name);
+    Mono<Contract> findContractByName(String name);
 }
