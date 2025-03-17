@@ -48,6 +48,9 @@ springdoc:
 logging:
   level:
     root: ${LOGGING_ROOT_LEVEL:info}
+    org:
+      hibernate: warn
+    liquibase: warn
 
 # custom properties
 my-section:

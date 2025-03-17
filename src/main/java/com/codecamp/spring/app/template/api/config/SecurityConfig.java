@@ -7,12 +7,15 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Slf4j
-@EnableWebSecurity
+@EnableWebFluxSecurity
 @Configuration
 @Profile({"dev"})
 public class SecurityConfig {
@@ -21,29 +24,30 @@ public class SecurityConfig {
     // for oauth with jwt, add extra dependency in pom and extend this config
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityWebFilterChain filterChain(ServerHttpSecurity http) {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .cors(ServerHttpSecurity.CorsSpec::disable)
                 .httpBasic(withDefaults())
                 .formLogin(withDefaults())
-                .authorizeHttpRequests(customizer -> customizer
+                .authorizeExchange(exchange -> exchange
 
                         // permit non-business endpoints
-                        .requestMatchers(
+                        .pathMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/docs-ui/**",
                                 "/docs-api/**",
-                                "/actuator/**",
+                                "/info",
+                                "/health",
                                 "/hello"
                         ).permitAll()
 
                         // use form login for business endpoints
-                        .requestMatchers("/v1/**").authenticated()
+                        .pathMatchers("/v1/**").authenticated()
 
                         // secure other endpoints by default
-                        .anyRequest().denyAll()
+                        .anyExchange().denyAll()
                 )
                 .build();
     }

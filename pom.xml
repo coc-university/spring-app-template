@@ -40,10 +40,8 @@
 	<dependencies>
 
 		<dependency>
-			<!-- for normal rest api and tomcat server -->
-			<!-- if you need a non-blocking/streaming/reactive stack, use webflux with netty -->
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
 		<dependency>
@@ -56,7 +54,7 @@
 		<dependency>
 			<!-- for swagger-ui, check props in yaml, https://springdoc.org/ -->
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
 			<version>2.6.0</version>
 		</dependency>
 
@@ -204,6 +202,8 @@
 						<useTags>true</useTags> <!-- set interface filename V1Api -->
 						<!-- https://openapi-generator.tech/docs/generators/spring/ -->
 						<useSpringBoot3>true</useSpringBoot3>
+						<reactive>true</reactive>
+						<useResponseEntity>false</useResponseEntity>
 					</configOptions>
 				</configuration>
 				<executions>
