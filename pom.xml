@@ -215,6 +215,7 @@
 						<useSpringBoot3>true</useSpringBoot3>
 						<reactive>true</reactive>
 						<useResponseEntity>false</useResponseEntity>
+						<skipDefaultInterface>true</skipDefaultInterface>
 					</configOptions>
 				</configuration>
 				<executions>

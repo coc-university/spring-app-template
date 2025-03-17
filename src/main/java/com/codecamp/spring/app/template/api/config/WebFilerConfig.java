@@ -7,7 +7,7 @@ import org.springframework.web.server.WebFilter;
 @Configuration
 public class WebFilerConfig {
 
-    @Bean
+    //@Bean // activate this to add filter
     public WebFilter createRequestFilter() {
         return new RequestFilter();
     }

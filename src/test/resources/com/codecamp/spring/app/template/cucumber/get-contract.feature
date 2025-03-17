@@ -15,7 +15,7 @@ Funktionalität: Abruf eines Vertrags
 
   Szenario: Vertrag wird nicht gefunden
     Angenommen ich bin authentifiziert
-    Und es geht um den Vertrag "Versicherung DEF"
+    Und es geht um den Vertrag "Versicherung XYZ"
     Wenn ich den Vertrag versuche abzurufen
     Dann ist der Http Status Code 404
 

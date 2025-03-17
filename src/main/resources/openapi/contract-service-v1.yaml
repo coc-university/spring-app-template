@@ -37,6 +37,23 @@ paths:
         404:
           $ref: '#/components/responses/404'
 
+  /v1/contracts:
+    get:
+      tags:
+        - contracts
+      summary: Abfragen aller Verträge
+      description: Abfragen aller Verträge
+      operationId: getContracts
+      responses:
+        200:
+          description: Die Verträge wurden abgerufen
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractResponse'
+
 components:
 
   responses:

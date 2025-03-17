@@ -7,7 +7,10 @@ import com.codecamp.spring.app.template.db.repository.ContractRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
@@ -22,6 +25,14 @@ public class ContractService {
                 .map(this::mapContractToContractResponse)
                 .doOnSuccess(contractResponse ->
                         log.info("found contract with name: {}", contractResponse.getTitle()));
+    }
+
+    public Flux<ContractResponse> findAllContracts() {
+        AtomicInteger counter = new AtomicInteger();
+        return contractRepository.findAll()
+                .map(this::mapContractToContractResponse)
+                .doOnNext(contractResponse -> counter.incrementAndGet())
+                .doOnComplete(() -> log.info("received {} contracts", counter.get()));
     }
 
     // decouple internal structure from the outside (entity to response DTO)
