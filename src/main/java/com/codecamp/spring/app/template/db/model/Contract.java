@@ -1,34 +1,38 @@
 package com.codecamp.spring.app.template.db.model;
 
-import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
-@Entity
 public class Contract {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "contract_id", updatable = false, nullable = false)
-    private UUID contractId;
+    @Column("contract_id")
+    private Long contractId;
 
     @Getter
     @Setter
-    @Column(name = "name", nullable = false)
+    @Column("name")
     private String name;
 
-    @Getter
-    @Setter
-    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @MappedCollection // Spalte in Tabelle address
     private List<Address> addresses;
 
     public Contract() {
     }
 
-    public Contract(String name) {
+    public Contract(String name, Address address) {
         this.name = name;
+        this.addresses = Collections.singletonList(address);
+    }
+
+    public void addAddress(Address address) {
+        this.addresses.add(address);
     }
 }

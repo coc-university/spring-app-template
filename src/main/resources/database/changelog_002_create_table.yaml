@@ -10,7 +10,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: contract_id
-                  type: uuid
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false

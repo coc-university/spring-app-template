@@ -10,7 +10,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: address_id
-                  type: uuid
+                  type: bigserial
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -20,5 +20,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: contract_id
-                  type: uuid
+                  name: contract_contract_id
+                  type: bigint
+
+        - addForeignKeyConstraint:
+            baseTableName: address
+            baseColumnNames: contract_contract_id
+            referencedTableName: contract
+            referencedColumnNames: contract_id
+            constraintName: fk_address_contract

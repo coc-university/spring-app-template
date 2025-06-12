@@ -2,6 +2,7 @@ package com.codecamp.spring.app.template.business.service;
 
 import com.codecamp.spring.app.template.api.model.ContractResponse;
 import com.codecamp.spring.app.template.business.exception.ContractNotFoundException;
+import com.codecamp.spring.app.template.db.model.Address;
 import com.codecamp.spring.app.template.db.model.Contract;
 import com.codecamp.spring.app.template.db.repository.ContractRepository;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,8 @@ class ContractServiceTest {
     @Test
     void shouldReturnContractResponse() {
         // arrange
-        when(contractRepository.findContractByName("Test")).thenReturn(Optional.of(new Contract("Test")));
+        when(contractRepository.findContractByName("Test"))
+                .thenReturn(Optional.of(new Contract("Test", new Address(""))));
         // act
         ContractResponse contractResponse = contractService.findContract("Test");
         // assert

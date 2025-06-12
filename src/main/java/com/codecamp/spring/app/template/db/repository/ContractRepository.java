@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ContractRepository extends ListCrudRepository<Contract, UUID> {
+public interface ContractRepository extends ListCrudRepository<Contract, Long> {
 
     Optional<Contract> findContractByName(String name);
 }

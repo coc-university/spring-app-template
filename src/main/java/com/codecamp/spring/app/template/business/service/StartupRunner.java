@@ -24,20 +24,13 @@ public class StartupRunner implements CommandLineRunner {
         //contractService.updateContractNameWithSave("Versicherung ABC", "Versicherung neu");
         //contractService.resetContractName();
 
-        //createContractWithAddress();
-        //readContractWithAddress();
+        createContractWithAddress();
+        readContractWithAddress();
     }
 
     void createContractWithAddress() {
-        Contract contract = new Contract();
-        contract.setName("Contract with address");
-
-        Address address = new Address();
-        address.setStreet("Street of Address");
-        address.setContract(contract);
-
-        contract.setAddresses(List.of(address));
-
+        Address address = new Address("Street of Address");
+        Contract contract = new Contract("Contract with address", address);
         contractService.createContract(contract);
     }
 
