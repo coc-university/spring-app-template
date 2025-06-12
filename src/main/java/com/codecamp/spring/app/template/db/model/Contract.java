@@ -4,21 +4,26 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "contract")
 public class Contract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+    @Column(name = "contract_id", updatable = false, nullable = false)
+    private UUID contractId;
 
     @Getter
     @Setter
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Address> addresses;
 
     public Contract() {
     }

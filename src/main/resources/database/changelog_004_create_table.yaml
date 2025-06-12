@@ -1,21 +1,24 @@
 databaseChangeLog:
   - changeSet:
-      id: spring-app-template-2
+      id: spring-app-template-4
       author: robin-schneider
       changes:
 
         - createTable:
             schemaName: spring_app_template
-            tableName: contract
+            tableName: address
             columns:
               - column:
-                  name: contract_id
+                  name: address_id
                   type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: name
+                  name: street
                   type: varchar(200)
                   constraints:
                     nullable: false
+              - column:
+                  name: contract_id
+                  type: uuid

@@ -23,6 +23,13 @@ public class ContractService {
         return mapContractToContractResponse(contract);
     }
 
+    public Contract findContractEntity(String name) {
+        Contract contract = contractRepository.findContractByName(name)
+                .orElseThrow(() -> new ContractNotFoundException("No contract found with name: " + name));
+        log.info("found contract entity with name: {}", contract.getName());
+        return contract;
+    }
+
     @Transactional
     public void updateContractNameWithTransaction(String oldName, String newName) {
         Contract contract = contractRepository.findContractByName(oldName)
@@ -41,6 +48,10 @@ public class ContractService {
     public void resetContractName() {
         Contract contract = contractRepository.findAll().getFirst();
         contract.setName("Versicherung ABC");
+        contractRepository.save(contract);
+    }
+
+    public void createContract(Contract contract) {
         contractRepository.save(contract);
     }
 
