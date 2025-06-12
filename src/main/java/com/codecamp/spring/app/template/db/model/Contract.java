@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 public class Contract {
 
@@ -21,15 +21,15 @@ public class Contract {
     @Column("name")
     private String name;
 
-    @MappedCollection // Spalte in Tabelle address
-    private List<Address> addresses;
+    @MappedCollection(idColumn = "contract_contract_id", keyColumn = "")
+    private Set<Address> addresses;
 
     public Contract() {
     }
 
     public Contract(String name, Address address) {
         this.name = name;
-        this.addresses = Collections.singletonList(address);
+        this.addresses = Collections.singleton(address);
     }
 
     public void addAddress(Address address) {
