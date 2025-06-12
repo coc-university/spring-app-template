@@ -7,6 +7,7 @@ import com.codecamp.spring.app.template.db.repository.ContractRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -20,6 +21,27 @@ public class ContractService {
                 .orElseThrow(() -> new ContractNotFoundException("No contract found with name: " + name));
         log.info("found contract with name: {}", contract.getName());
         return mapContractToContractResponse(contract);
+    }
+
+    @Transactional
+    public void updateContractNameWithTransaction(String oldName, String newName) {
+        Contract contract = contractRepository.findContractByName(oldName)
+                .orElseThrow(() -> new ContractNotFoundException("No contract found with name: " + oldName));
+        contract.setName(newName);
+        // no save() needed
+    }
+
+    public void updateContractNameWithSave(String oldName, String newName) {
+        Contract contract = contractRepository.findContractByName(oldName)
+                .orElseThrow(() -> new ContractNotFoundException("No contract found with name: " + oldName));
+        contract.setName(newName);
+        contractRepository.save(contract);
+    }
+
+    public void resetContractName() {
+        Contract contract = contractRepository.findAll().getFirst();
+        contract.setName("Versicherung ABC");
+        contractRepository.save(contract);
     }
 
     // decouple internal structure from the outside (entity to response DTO)

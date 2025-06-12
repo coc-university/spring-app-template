@@ -2,6 +2,7 @@ package com.codecamp.spring.app.template.db.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ public class Contract {
     private UUID id;
 
     @Getter
+    @Setter
     @Column(name = "name", nullable = false)
     private String name;
 
