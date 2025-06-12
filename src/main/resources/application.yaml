@@ -12,14 +12,16 @@ spring:
       name: test
       password: test
   datasource:
-    # url: jdbc:postgresql://${DB_HOSTNAME:localhost}:${DB_PORT:5432}/${DB_NAME:spring-template}
-    # http://www.h2database.com/html/features.html
-    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    username: ${DB_USERNAME:test}
-    password: ${DB_PASSWORD:test}
+    url: jdbc:postgresql://localhost:5432/spring-app-template
+    username: test
+    password: test
+
+  # start database as container:
+  # docker run -d --name spring-app-template -e POSTGRES_DB=spring-app-template -e POSTGRES_USER=test -e POSTGRES_PASSWORD=test -p 5432:5432 postgres:16
+  # docker ps
+
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         # will be created via liquibase

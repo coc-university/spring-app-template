@@ -14,7 +14,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Slf4j
 @EnableWebSecurity
 @Configuration
-@Profile({"dev"})
+@Profile({"dev", "test"})
 public class SecurityConfig {
 
     // simple config that uses basic-auth and form-login (username and password in application.yaml)

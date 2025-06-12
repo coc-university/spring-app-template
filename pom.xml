@@ -85,9 +85,14 @@
 		</dependency>
 
 		<dependency>
-			<!-- in-memory sql database, use real postgres/mysql/oracle/etc. in prod -->
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -294,6 +299,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
+					<argLine>-Dspring.profiles.active=test</argLine>
 					<skip>false</skip>
 					<includes>
 						<include>**/*Test.java</include>
